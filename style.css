@@ -1,0 +1,633 @@
+/* --- Variables CSS pour une cohérence thématique --- */
+:root {
+    --color-bg-dark: #05050C; /* Bleu nuit très sombre */
+    --color-primary-neon: #00FFFF; /* Cyan */
+    --color-secondary-neon: #FF00FF; /* Magenta */
+    --color-accent-glitch: #FF8C00; /* Orange brûlé */
+    --color-text-light: #E0E0E0;
+    --color-error: #FF3333;
+    --color-success: #33FF33;
+
+    --font-major-mono: 'Major Mono Display', monospace;
+    --font-space-mono: 'Space Mono', monospace;
+    --font-fira-code: 'Fira Code', monospace;
+}
+
+/* --- Styles Généraux --- */
+body {
+    margin: 0;
+    font-family: var(--font-fira-code);
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-light);
+    overflow: hidden; /* Prévient les barres de défilement */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    perspective: 1000px; /* Pour les transformations 3D */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%2300FFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crosshair"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="2" y2="12"></line><line x1="12" y1="2" x2="12" y2="22"></line></svg>') 12 12, auto; /* Curseur personnalisé */
+}
+
+/* Effet de grain et scanlines globales */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 1px, transparent 1px, transparent 3px),
+                repeating-linear-gradient(90deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 1px, transparent 1px, transparent 3px);
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.05;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+    z-index: 101; /* Plus haut que le grain */
+    pointer-events: none;
+    animation: scanlines-effect 8s linear infinite;
+    opacity: 0.1;
+}
+
+@keyframes scanlines-effect {
+    from { background-position: 0% 0%; }
+    to { background-position: 0% 100%; }
+}
+
+/* --- Écran de Démarrage --- */
+.boot-sequence {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: opacity 1s ease-out; /* Pour le fade out final */
+    overflow: hidden;
+     /* position: relative; <--- Supprimez ou mettez en commentaire cette ligne pour tester */
+}
+
+.boot-sequence.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.boot-sequence.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--color-primary-neon), transparent);
+    animation: scanline-move 1.5s infinite linear;
+    box-shadow: 0 0 10px var(--color-primary-neon);
+}
+
+@keyframes scanline-move {
+    0% { top: 0%; }
+    100% { top: 100%; }
+}
+
+.boot-text {
+    font-family: var(--font-space-mono);
+    color: var(--color-primary-neon);
+    font-size: 1.2em; /* Légèrement agrandi pour plus d'impact */
+    white-space: pre-wrap;
+    text-shadow: 0 0 7px var(--color-primary-neon), 0 0 15px rgba(0,255,255,0.7), 0 0 25px rgba(0,255,255,0.3); /* Plus de halo */
+    line-height: 1.4;
+    max-width: 80%;
+    text-align: left; /* REVERTED: Revenir à l'alignement à gauche */
+    filter: brightness(1);
+    /* Ajout d'un léger effet de pulsation pour le texte lui-même */
+    animation: boot-text-pulse 2s infinite alternate ease-in-out;
+}
+
+@keyframes boot-text-pulse {
+    0% { text-shadow: 0 0 7px var(--color-primary-neon); }
+    100% { text-shadow: 0 0 10px var(--color-primary-neon), 0 0 20px rgba(0,255,255,0.7), 0 0 35px rgba(0,255,255,0.4); }
+}
+
+
+/* Effets de Glitch Textuel (appliqués via JS) */
+.boot-text.glitch {
+    animation: text-glitch 0.2s infinite alternate;
+}
+
+@keyframes text-glitch {
+    0% { transform: translate(0, 0); text-shadow: 0 0 5px var(--color-primary-neon); }
+    33% { transform: translate(1px, -1px); text-shadow: -1px -1px 5px var(--color-primary-neon); }
+    66% { transform: translate(-1px, 1px); text-shadow: 1px 1px 5px var(--color-primary-neon); }
+    100% { transform: translate(0, 0); text-shadow: 0 0 5px var(--color-primary-neon); }
+}
+
+.boot-progress {
+    width: 60%;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-primary-neon);
+    margin-top: 30px;
+    box-shadow: 0 0 8px var(--color-primary-neon);
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--color-secondary-neon);
+    transition: width 0.3s ease-out;
+    box-shadow: 0 0 5px var(--color-secondary-neon);
+}
+
+/* --- Contenu Principal --- */
+.main-interface {
+    width: 95%;
+    max-width: 1400px;
+    height: 95vh;
+    background: linear-gradient(160deg, #101020, #080815);
+    border: 3px solid var(--color-primary-neon);
+    box-shadow: 0 0 30px var(--color-primary-neon), inset 0 0 10px var(--color-primary-neon);
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Pour les éléments absolus */
+    transition: opacity 1s ease-in;
+    filter: brightness(1); /* Pour les effets de glitch */
+
+    /* AJOUT : Effet de glow subtil sur le bord de l'interface principale */
+    animation: interface-glow 5s infinite alternate ease-in-out;
+}
+
+@keyframes interface-glow {
+    0% { box-shadow: 0 0 30px var(--color-primary-neon), inset 0 0 10px var(--color-primary-neon); }
+    50% { box-shadow: 0 0 45px var(--color-primary-neon), inset 0 0 15px var(--color-primary-neon); }
+    100% { box-shadow: 0 0 30px var(--color-primary-neon), inset 0 0 10px var(--color-primary-neon); }
+}
+
+.main-interface.hidden {
+    opacity: 0;
+    pointer-events: none; /* Désactive les interactions quand c'est caché */
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.glitch-text {
+    font-family: var(--font-major-mono);
+    font-size: 4em; /* Agrandir encore un peu le titre principal */
+    color: var(--color-secondary-neon);
+    text-shadow: 0 0 20px var(--color-secondary-neon), 0 0 35px rgba(255,0,255,0.7), 0 0 50px rgba(255,0,255,0.4); /* Plus de halo, plus d'impact */
+    position: relative;
+    animation: text-flicker 0.2s infinite alternate;
+    line-height: 0.8;
+    letter-spacing: 5px; /* Espacement pour un look plus "numérique" */
+    text-transform: uppercase; /* S'assurer que c'est en majuscules */
+}
+
+@keyframes text-flicker {
+    0% { text-shadow: 0 0 15px var(--color-secondary-neon); }
+    50% { text-shadow: 0 0 10px var(--color-secondary-neon), 2px 2px 0px rgba(0,255,255,0.2); }
+    100% { text-shadow: 0 0 15px var(--color-secondary-neon); }
+}
+
+.glitch-text::before, .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    filter: blur(1px);
+}
+
+.glitch-text::before {
+    content: attr(data-text);
+    color: var(--color-primary-neon);
+    z-index: -1;
+    animation: glitch-anim-1 2s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+    content: attr(data-text);
+    color: var(--color-accent-glitch);
+    z-index: -2;
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+    0% { clip-path: inset(10% 0 80% 0); transform: translate(-5px, 0); }
+    20% { clip-path: inset(40% 0 30% 0); transform: translate(5px, 0); }
+    40% { clip-path: inset(60% 0 10% 0); transform: translate(-3px, 0); }
+    60% { clip-path: inset(20% 0 60% 0); transform: translate(3px, 0); }
+    80% { clip-path: inset(70% 0 0% 0); transform: translate(-4px, 0); }
+    100% { clip-path: inset(10% 0 80% 0); transform: translate(0, 0); }
+}
+
+@keyframes glitch-anim-2 {
+    0% { clip-path: inset(20% 0 70% 0); transform: translate(3px, 0); }
+    15% { clip-path: inset(50% 0 20% 0); transform: translate(-4px, 0); }
+    30% { clip-path: inset(70% 0 0% 0); transform: translate(2px, 0); }
+    45% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 0); }
+    60% { clip-path: inset(80% 0 0% 0); transform: translate(4px, 0); }
+    75% { clip-path: inset(30% 0 50% 0); transform: translate(-3px, 0); }
+    90% { clip-path: inset(0% 0 90% 0); transform: translate(1px, 0); }
+    100% { clip-path: inset(20% 0 70% 0); transform: translate(0, 0); }
+}
+
+
+.sub-designation {
+    font-family: var(--font-fira-code);
+    font-size: 0.45em; /* Légèrement agrandi */
+    color: var(--color-accent-glitch);
+    display: block;
+    text-shadow: 0 0 5px var(--color-accent-glitch); /* Ajouter un petit halo */
+    margin-top: 5px; /* Pour un peu d'espace avec le titre */
+    letter-spacing: 2px;
+}
+
+.status-line {
+    font-family: var(--font-space-mono);
+    color: var(--color-text-light);
+    font-size: 0.9em;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+/* Conteneur principal (cerveau + panel latéral) */
+.core-container {
+    display: flex;
+    width: 100%;
+    flex-grow: 1; /* Prend l'espace disponible */
+    gap: 20px;
+    position: relative;
+}
+
+/* Affichage du Cerveau (image de fond) */
+.brain-display {
+    flex-grow: 1;
+    background-image: url('1749755922171xz8fqvat.webp'); /* **TU DEVRAS CRÉER CETTE IMAGE !** */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+    border: 1px solid rgba(0,255,255,0.2);
+    box-shadow: 0 0 20px rgba(0,255,255,0.3) inset, 0 0 20px rgba(255,0,255,0.3);
+    animation: brain-pulse 4s infinite alternate ease-in-out; /* Pulsation subtile */
+    filter: brightness(0.9) saturate(1.1);
+}
+
+@keyframes brain-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 20px rgba(0,255,255,0.3) inset, 0 0 20px rgba(255,0,255,0.3); }
+    100% { transform: scale(1.005); box-shadow: 0 0 25px rgba(0,255,255,0.5) inset, 0 0 25px rgba(255,0,255,0.5); }
+}
+
+
+/* Modules du Cerveau (Zones Interactives) */
+.brain-module {
+    position: absolute;
+    background: rgba(0, 255, 255, 0.1); /* Cyan translucide */
+    border: 1px solid var(--color-primary-neon);
+    box-shadow: 0 0 10px var(--color-primary-neon);
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-family: var(--font-space-mono);
+    font-size: 0.7em;
+    color: var(--color-text-light);
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    line-height: 1.2;
+    transform: translateZ(0); /* Pour l'accélération matérielle */
+}
+
+.brain-module:hover {
+    background: rgba(255, 0, 255, 0.2); /* Magenta translucide au survol */
+    border-color: var(--color-secondary-neon);
+    box-shadow: 0 0 15px var(--color-secondary-neon), 0 0 5px var(--color-secondary-neon) inset;
+    transform: scale(1.05) translateZ(10px); /* Léger effet 3D */
+    filter: brightness(1.2);
+}
+
+.module-label {
+    text-shadow: 0 0 3px var(--color-primary-neon);
+}
+
+/* Positions des modules (à ajuster selon TON image de cerveau) */
+/* Exemple : (Ces valeurs sont des estimations pour une image générique) */
+.module-frontal { top: 15%; left: 15%; width: 20%; height: 20%; }
+.module-visual { top: 25%; left: 65%; width: 15%; height: 15%; }
+.module-limbic { top: 55%; left: 20%; width: 18%; height: 18%; }
+.module-cerebellum { top: 65%; left: 60%; width: 17%; height: 17%; }
+.module-brainstem { top: 80%; left: 38%; width: 12%; height: 12%; }
+
+
+/* Panel Latéral */
+.side-panel {
+    width: 300px;
+    border: 1px solid var(--color-secondary-neon);
+    background-color: rgba(10, 10, 20, 0.8);
+    padding: 15px;
+    box-shadow: 0 0 15px var(--color-secondary-neon);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    filter: brightness(1); /* Pour les effets de glitch */
+}
+
+.panel-section h2 {
+    font-family: var(--font-major-mono);
+    color: var(--color-accent-glitch);
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px var(--color-accent-glitch);
+}
+
+.side-panel p {
+    font-size: 0.9em;
+    color: var(--color-text-light);
+    line-height: 1.5;
+}
+
+.status-ok { color: var(--color-success); }
+.status-warning { color: var(--color-accent-glitch); }
+.status-critical { color: var(--color-error); animation: blink-red 1s infinite alternate; }
+
+@keyframes blink-red {
+    from { color: var(--color-error); }
+    to { color: #550000; }
+}
+
+.data-stream {
+    height: 150px;
+    background-color: #000;
+    border: 1px solid var(--color-primary-neon);
+    padding: 10px;
+    overflow-y: scroll;
+    font-family: var(--font-fira-code);
+    font-size: 0.8em;
+    color: var(--color-primary-neon);
+    box-shadow: inset 0 0 5px var(--color-primary-neon);
+    line-height: 1.2;
+    white-space: pre-wrap;
+    word-break: break-all;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-secondary-neon) var(--color-bg-dark);
+}
+
+.data-stream::-webkit-scrollbar { width: 8px; }
+.data-stream::-webkit-scrollbar-track { background: var(--color-bg-dark); }
+.data-stream::-webkit-scrollbar-thumb { background-color: var(--color-secondary-neon); border-radius: 4px; border: 1px solid var(--color-bg-dark); }
+
+
+/* Panneau de Détails des Zones (Pop-up) */
+.zone-details-panel {
+    position: absolute; /* Assurez-vous que seule cette ligne est présente pour 'position' */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8); /* Effet d'échelle à l'apparition */
+    background: linear-gradient(135deg, #150020, #000010);
+    border: 3px solid var(--color-secondary-neon);
+    box-shadow: 0 0 35px var(--color-secondary-neon), inset 0 0 15px rgba(255,0,255,0.7);
+    padding: 40px;
+    width: 90%;
+    max-width: 800px;
+    min-height: 400px;
+    z-index: 1000;
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    /* La ligne "position: relative;" DOIT ÊTRE SUPPRIMÉE d'ici */
+    overflow: hidden;
+}
+
+.zone-details-panel.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.8);
+}
+
+.zone-details-panel h2 {
+    font-family: var(--font-major-mono);
+    color: var(--color-primary-neon);
+    text-align: center;
+    margin-top: 0;
+    font-size: 2em;
+    text-shadow: 0 0 10px var(--color-primary-neon);
+}
+
+.detail-content {
+    font-family: var(--font-space-mono);
+    font-size: 1em;
+    line-height: 1.6;
+    color: var(--color-text-light);
+    flex-grow: 1;
+    overflow-y: auto; /* Pour les contenus longs */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-secondary-neon) var(--color-bg-dark);
+}
+
+.close-button {
+    background-color: var(--color-error);
+    color: white;
+    border: 2px solid var(--color-error);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: var(--font-major-mono);
+    font-size: 1.1em;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 8px var(--color-error);
+    letter-spacing: 1px;
+}
+
+.close-button:hover {
+    background-color: darkred;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--color-error);
+}
+
+.panel-border-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    box-sizing: border-box;
+    pointer-events: none;
+    animation: border-glitch 1s infinite alternate;
+}
+
+@keyframes border-glitch {
+    0% { border-color: rgba(255,0,255,0.5) transparent transparent rgba(0,255,255,0.5); }
+    25% { border-color: transparent rgba(255,0,255,0.5) rgba(0,255,255,0.5) transparent; }
+    50% { border-color: rgba(0,255,255,0.5) transparent rgba(255,0,255,0.5) transparent; }
+    75% { border-color: transparent rgba(0,255,255,0.5) transparent rgba(255,0,255,0.5); }
+    100% { border-color: rgba(255,0,255,0.5) transparent transparent rgba(0,255,255,0.5); }
+}
+
+
+/* Footer */
+.footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px dashed rgba(0,255,255,0.3);
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-fira-code);
+    font-size: 0.8em;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.5px;
+}
+
+/* Styles pour les éléments interactifs spécifiques aux zones */
+.retro-button {
+    background-color: var(--color-primary-neon);
+    color: var(--color-bg-dark);
+    border: 2px solid var(--color-primary-neon);
+    padding: 10px 20px;
+    font-family: var(--font-major-mono);
+    font-size: 1em;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--color-primary-neon);
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    margin-top: 15px;
+    letter-spacing: 1px;
+}
+
+.retro-button:hover {
+    background-color: var(--color-secondary-neon);
+    box-shadow: 0 0 15px var(--color-secondary-neon);
+    transform: translateY(-2px);
+}
+
+.retro-button:active {
+    transform: translateY(0);
+    box-shadow: 0 0 5px var(--color-primary-neon);
+}
+
+.idea-output, .bug-message, .compiler-status, .fuel-level-display {
+    background-color: #000;
+    border: 1px dashed var(--color-accent-glitch);
+    padding: 10px;
+    margin-top: 10px;
+    font-family: var(--font-fira-code);
+    color: var(--color-accent-glitch);
+    white-space: pre-wrap;
+    text-align: left;
+    min-height: 50px; /* Pour éviter le tassement */
+    display: flex;
+    align-items: center;
+}
+
+.color-picker {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.color-btn {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--color-text-light);
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+    border-color: var(--color-primary-neon);
+}
+
+.code-snippet pre {
+    background-color: #1a1a20;
+    border: 1px solid var(--color-primary-neon);
+    padding: 15px;
+    overflow-x: auto;
+    font-size: 0.9em;
+    line-height: 1.4;
+    box-shadow: inset 0 0 8px rgba(0,255,255,0.2);
+}
+
+.code-snippet code {
+    color: var(--color-success); /* Vert pour le code */
+}
+
+/* Mini-jeu de bug (à styliser davantage) */
+.bug-zone {
+    width: 100%;
+    height: 200px;
+    border: 1px solid var(--color-error);
+    background-color: #000;
+    position: relative;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.bug-packet {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background-color: var(--color-error);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--color-error);
+    animation: bug-float 5s infinite ease-in-out alternate;
+    opacity: 0.8;
+}
+
+@keyframes bug-float {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(50px, -30px); }
+    50% { transform: translate(100px, 50px); }
+    75% { transform: translate(-20px, 80px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Jauge de caféine */
+.coffee-gauge-container {
+    width: 100%;
+    height: 30px;
+    background-color: #000;
+    border: 1px solid var(--color-accent-glitch);
+    margin-top: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.coffee-gauge-fill {
+    height: 100%;
+    width: var(--coffee-level, 0%); /* Utilise une variable CSS modifiée par JS */
+    background: linear-gradient(to right, #6F4E37, #A0522D); /* Couleurs de café */
+    transition: width 0.5s ease-out;
+    box-shadow: 0 0 10px rgba(160,82,45,0.5);
+}

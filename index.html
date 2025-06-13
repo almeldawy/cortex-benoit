@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORTEX BENOÎT - SYSTÈME NEURONAL DÉGÉNÉRÉ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Space+Mono:wght@400;700&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="boot-sequence" class="boot-sequence active">
+        <div class="scanline"></div>
+        <pre id="boot-text" class="boot-text"></pre>
+        <div class="boot-progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <audio id="boot-static-audio" src="robot-talk-3-344759.mp3" preload="auto"></audio> <audio id="boot-beep-audio" src="beep-warning-6387.mp3" preload="auto"></audio> </div>
+
+    <div id="main-interface" class="main-interface hidden">
+        <header class="header">
+            <h1 class="glitch-text">CORTEX BENOÎT <span class="sub-designation">V.3.1.4</span></h1>
+            <p class="status-line">SYNAPSES EN LIGNE. ERREURS MINEURES DÉTECTÉES. PROCÉDER AVEC PRUDENCE.</p>
+        </header>
+
+        <main class="core-container">
+            <div class="brain-display">
+                <div class="brain-module module-frontal" data-zone="frontal">
+                    <span class="module-label">LOBE FRONTAL<br>[IDÉES.ABSU]</span>
+                </div>
+                <div class="brain-module module-visual" data-zone="visual">
+                    <span class="module-label">CORTEX VISUEL<br>[DESIGN.CSS]</span>
+                </div>
+                <div class="brain-module module-limbic" data-zone="limbic">
+                    <span class="module-label">SYSTÈME LIMBIQUE<br>[BUGS.EMO]</span>
+                </div>
+                <div class="brain-module module-cerebellum" data-zone="cerebellum">
+                    <span class="module-label">CERVELET<br>[LOGIC.JS]</span>
+                </div>
+                <div class="brain-module module-brainstem" data-zone="brainstem">
+                    <span class="module-label">TRONC CÉRÉBRAL<br>[CAFÉINE.PWR]</span>
+                </div>
+            </div>
+
+            <aside class="side-panel">
+                <div class="panel-section">
+                    <h2>ÉTAT DU SYSTÈME</h2>
+                    <p>STATUT NEURONAL: <span id="neuronalStatus" class="status-ok">STABLE</span></p>
+                    <p>TEMPS DE TRAVAIL: <span id="uptime">00:00:00</span></p>
+                </div>
+                <div class="panel-section">
+                    <h2>DONNÉES ENTRANTES</h2>
+                    <div class="data-stream" id="dataStream"></div>
+                </div>
+            </aside>
+        </main>
+
+        <section id="zone-details-panel" class="zone-details-panel hidden">
+            <h2 id="detail-panel-title"></h2>
+            <div id="detail-panel-content" class="detail-content">
+                </div>
+            <button id="close-details-button" class="close-button">FERMER [X]</button>
+            <div class="panel-border-glitch"></div>
+        </section>
+
+        <footer class="footer">
+            <p>CONÇU PAR BENOÎTCORP &lt;SYSTEM_ERROR&gt; 2025.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
