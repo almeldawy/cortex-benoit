@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dataStreamElement = document.getElementById('dataStream');
 
     // --- Audio de fond pour l'ambiance (nécessite une interaction utilisateur pour démarrer) ---
-    const backgroundAudio = new Audio('robot-talk-3-344759.mp3'); // **TU DEVRAS FOURNIR CE FICHIER**
+    const backgroundAudio = new Audio('robot-talk-3-344759.mp3');
     backgroundAudio.loop = true;
     backgroundAudio.volume = 0.2;
 
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
 
                         // Glitch sonore (tu devras fournir un fichier 'glitch.mp3')
-                        const glitchAudio = new Audio('glitch.mp3');
+                        const glitchAudio = new Audio('glitch.mp3'); // Ceci devrait être 'short_glitch.mp3' selon l'autre partie du script
                         glitchAudio.volume = 0.5;
                         glitchAudio.play().catch(e => console.log("Glitch audio error:", e));
                     };
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         gsap.to(bugPacket, {
                             scale: 0, opacity: 0, duration: 0.2, onComplete: () => {
                                 bugPacket.remove();
-                                const bugSound = new Audio('sounds/bug_squash.mp3'); // **TU DEVRAS FOURNIR CE FICHIER**
+                                const bugSound = new Audio('sounds/bug_squash.mp3'); // Assurez-vous que ce chemin est correct
                                 bugSound.volume = 0.5;
                                 bugSound.play().catch(e => console.log("Bug sound error:", e));
                             }
@@ -241,45 +241,58 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         cerebellum: {
-            title: 'CERVELET - LOGIQUE JAVASCRIPT',
+            title: "CERVELET - LOGIC.JS (OPTIMISATION LOGICIELLE)",
             content: `
-                <p>Le cœur de la rationalité. Ici, le code est compilé, les fonctions exécutées et les erreurs (parfois) gérées. Ne touchez pas au ; !</p>
-                <div class="code-snippet">
-                    <pre><code><span style="color: yellow;">// ANALYSE DU FLUX NEURONAL</span>
-function <span style="color: var(--color-success);">processThought</span>(thoughtData) {
-    if (thoughtData.<span style="color: var(--color-accent-glitch);">isAbsurd</span>) {
-        <span style="color: var(--color-error);">throw new Error</span>("TOO_MUCH_ABSURDITY_EXCEPTION");
-    }
-    return thoughtData.<span style="color: var(--color-primary-neon);">toWebsiteCode</span>();
-}</code></pre>
-                </div>
-                <button id="executeCode" class="retro-button">EXÉCUTER SCRIPT CÉRÉBRAL</button>
-                <p id="executionStatus" class="idea-output"></p>
+                <p>Le module <b>LOGIC.JS</b> gère l'optimisation des algorithmes. Il exécute des simulations de routine pour améliorer l'efficacité globale du Cortex Benoît.</p>
+                <p>SIMULATION DE ROUTINE EN COURS...</p>
+                <div id="logicSimulation" class="data-stream" style="height: 120px;"></div>
+                <button id="runOptimizationBtn" class="retro-button">LANCER OPTIMISATION</button>
             `,
-            activate: (panelElement) => {
-                const executeButton = panelElement.querySelector('#executeCode');
-                const executionStatus = panelElement.querySelector('#executionStatus');
-                if (executeButton) {
-                    executeButton.onclick = () => {
-                        executionStatus.textContent = 'COMPILATION EN COURS...';
-                        executeButton.disabled = true;
-                        gsap.timeline()
-                            .to(executionStatus, { duration: 0.1, filter: 'blur(2px)', repeat: 5, yoyo: true, ease: "steps(1)" })
-                            .to(executionStatus, { duration: 0.5, filter: 'blur(0px)', onComplete: () => {
-                                const success = Math.random() > 0.3; // Plus de chances de succès
-                                if (success) {
-                                    executionStatus.textContent = 'EXÉCUTION TERMINÉE. RÉSULTAT: SITE FONCTIONNEL (PEUT-ÊTRE).';
-                                    executionStatus.style.color = 'var(--color-success)';
-                                } else {
-                                    executionStatus.textContent = 'ERREUR D\'EXÉCUTION: BOUCLE INFINIE DÉTECTÉE. VEUILLEZ REDÉMARRER LE CERVEAU.';
-                                    executionStatus.style.color = 'var(--color-error)';
-                                    // Potentiellement re-déclencher le boot screen ici si on veut un effet drastique
-                                    // setTimeout(() => location.reload(), 2000);
-                                }
-                                executeButton.disabled = false;
-                            }});
+            activate: (panelElement) => { // CHANGEMENT ICI : 'script' devient 'activate'
+                const logicSimulation = panelElement.querySelector('#logicSimulation'); // CHANGEMENT ICI
+                const runOptimizationBtn = panelElement.querySelector('#runOptimizationBtn'); // CHANGEMENT ICI
+                let simulationInterval;
+
+                function startSimulation() {
+                    let simCounter = 0;
+                    simulationInterval = setInterval(() => {
+                        simCounter++;
+                        const messages = [
+                            `[LOGIC.JS]: Processing data block ${simCounter}...`,
+                            `[LOGIC.JS]: Analyzing algorithm efficiency...`,
+                            `[LOGIC.JS]: Rerouting neural pathways...`,
+                            `[LOGIC.JS]: Compiling optimization patch ${simCounter % 10}...`
+                        ];
+                        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                        logicSimulation.textContent += `${randomMessage}\n`;
+                        logicSimulation.scrollTop = logicSimulation.scrollHeight;
+                        if (simCounter > 20) { // Stop after some messages
+                            clearInterval(simulationInterval);
+                            logicSimulation.textContent += "\n[LOGIC.JS]: OPTIMISATION COMPLÈTE. Efficacité +3.14%.\n";
+                            runOptimizationBtn.style.display = 'block'; // Show button again
+                            neuronalStatus.textContent = "STABLE";
+                            neuronalStatus.className = "status-ok";
+                        }
+                    }, 300);
+                }
+
+                if (runOptimizationBtn) { // Ajout d'une vérification
+                    runOptimizationBtn.onclick = () => {
+                        logicSimulation.textContent = ""; // Clear previous log
+                        runOptimizationBtn.style.display = 'none'; // Hide button during simulation
+                        neuronalStatus.textContent = "OPTIMISATION_ACTIVE...";
+                        neuronalStatus.className = "status-warning";
+                        startSimulation();
                     };
                 }
+
+                // Cleanup on close - important pour les intervalles
+                const closeHandler = () => {
+                    clearInterval(simulationInterval);
+                    closeDetailsButton.removeEventListener('click', closeHandler); // Supprime l'écouteur après nettoyage
+                };
+                closeDetailsButton.addEventListener('click', closeHandler, { once: true });
+                zoneDetailsPanel.dataset.intervalId = simulationInterval; // Stocker l'ID pour le nettoyage global
             }
         },
         brainstem: {
@@ -343,16 +356,16 @@ function <span style="color: var(--color-success);">processThought</span>(though
 
                 zoneDetailsPanel.classList.remove('hidden');
 
-        // AJOUTEZ CES LIGNES POUR RENDRE LE PANNEAU VISIBLE ET À TAILLE NORMALE INSTANTANÉMENT
-        zoneDetailsPanel.style.opacity = '1';
-        zoneDetailsPanel.style.transform = 'translate(-50%, -50%) scale(1)';
-        zoneDetailsPanel.style.pointerEvents = 'auto'; // Pour qu'il soit interactif si besoin
+                // AJOUTEZ CES LIGNES POUR RENDRE LE PANNEAU VISIBLE ET À TAILLE NORMALE INSTANTANÉMENT
+                zoneDetailsPanel.style.opacity = '1';
+                zoneDetailsPanel.style.transform = 'translate(-50%, -50%) scale(1)';
+                zoneDetailsPanel.style.pointerEvents = 'auto'; // Pour qu'il soit interactif si besoin
 
-        // L'appel GSAP reste commenté :
-        // gsap.fromTo(zoneDetailsPanel,
-        //     { opacity: 0, scale: 0.8, y: "-50%" },
-        //     { opacity: 1, scale: 1, y: "-50%", duration: 0.4, ease: "back.out(1.7)" }
-        // );
+                // L'appel GSAP reste commenté :
+                // gsap.fromTo(zoneDetailsPanel,
+                //     { opacity: 0, scale: 0.8, y: "-50%" },
+                //     { opacity: 1, scale: 1, y: "-50%", duration: 0.4, ease: "back.out(1.7)" }
+                // );
 
                 // Activer les fonctionnalités spécifiques à la zone
                 if (data.activate) {
@@ -394,6 +407,9 @@ function <span style="color: var(--color-success);">processThought</span>(though
         dataStreamElement.scrollTop = dataStreamElement.scrollHeight; // Scroll auto
 
         // Glitch aléatoire de l'interface
+        // La condition window.innerWidth > 768 est désormais dans le CSS pour les animations du brain-display
+        // Si vous voulez que ce glitch spécifique ne se produise que sur les grands écrans, vous devez l'ajouter ici.
+        // Pour l'instant, il se produit sur toutes les tailles d'écran.
         if (Math.random() < 0.05) { // 5% de chance de glitch
             gsap.timeline()
                 .set(mainInterface, { filter: 'brightness(1.5) saturate(2)' })
@@ -410,7 +426,7 @@ function <span style="color: var(--color-success);">processThought</span>(though
                     x: 0, y: 0,
                     filter: 'brightness(1) saturate(1)'
                 });
-            const glitchAudio = new Audio('short_glitch.mp3'); // **TU DEVRAS FOURNIR CE FICHIER**
+            const glitchAudio = new Audio('short_glitch.mp3');
             glitchAudio.volume = 0.3;
             glitchAudio.play().catch(e => console.log("Short glitch audio error:", e));
         }
